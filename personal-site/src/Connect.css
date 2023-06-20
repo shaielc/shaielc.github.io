@@ -1,0 +1,17 @@
+.connectionElement {
+    margin-left: auto;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    user-select: none;
+}
+.disconnected {
+    background-color: gray
+}
+.connecting {
+    background-color: yellow;
+}
+
+.connected {
+    background-color: green;
+}
