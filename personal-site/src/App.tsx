@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { ConnectionHeader } from './Connect'
 import { ThebeServerProvider, ThebeBundleLoaderProvider } from 'thebe-react'
 import {makeConfiguration} from 'thebe-core'
 import { Notebook} from './Notebook'
+import { ServerModeType, ModeChooser } from './ServerMode'
 
 const config = makeConfiguration({
 
@@ -18,23 +19,15 @@ const config = makeConfiguration({
 const JUPYTER_UTILITY_WIDGETS_SOURCE = 'https://raw.githubusercontent.com/shaielc/jupyter-utility-widgets/main/examples/'
 
 function App() {
-  // useEffect(
-  //   () => {
-  //       for (var i = 0; i < localStorage.length; i++) {
-  //           let key = localStorage.key(i)
-  //           if (!key) return;
-  //           if (key.startsWith('thebe')) {
-  //               localStorage.removeItem(key)
-  //           }
-  //       }
-  //   }
-  //   ,[])
+  const [mode, setMode] = useState<ServerModeType>("Lite")
+
   return (
     <ThebeBundleLoaderProvider>
-      <ThebeServerProvider connect={false} config={config} useBinder={true} useJupyterLite={false} options={{savedSessionOptions: {enabled: false}}}>
+      <ThebeServerProvider connect={false} config={config} useBinder={mode === "Binder"} useJupyterLite={mode === "Lite"} options={{savedSessionOptions: {enabled: false}}}>
         <div className="App">
           <header className="App-header">
             <div style={{flexGrow:1}}></div>
+            <ModeChooser mode={mode} setMode={setMode}></ModeChooser>
             <ConnectionHeader></ConnectionHeader>
           </header>
           <main className='App-main'>

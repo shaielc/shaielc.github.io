@@ -1,0 +1,17 @@
+.modeChooser {
+    display: "flex";
+    align-self: "stretch";
+}
+
+.modeChoice {
+    margin-left: auto;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    user-select: none;
+    background-color: #5e6470;
+}
+
+.modeChoice.activeMode {
+    background-color: #59924d;
+}
