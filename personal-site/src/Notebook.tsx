@@ -40,6 +40,7 @@ export default function JupyterOutputDecoration({
 
 export function NotebookHandler({ source, name }: { source: string, name: string }) {
     const [executed, setExecuted] = useState(false)
+    const [installing, setInstalling] = useState(false)
     const { ready, executing, executeAll, errors, cellRefs, cellIds, session } = useNotebook(
         name,
         notebookSource({ source }),
@@ -48,6 +49,15 @@ export function NotebookHandler({ source, name }: { source: string, name: string
 
     async function run() {
         await session?.kernel?.requestExecute({code: "%pip install jupyter-utility-widgets\n", silent: true}).done;
+        const code = `
+        import ipywidgets as widgets
+        import matplotlib.pyplot as plt
+        import numpy as np      
+        from ipywidgets import Output, FloatSlider, Layout
+        from IPython.display import clear_output
+        `
+        await session?.kernel?.requestExecute({code, silent: true}).done;
+        
         await executeAll();
         setExecuted(true);
     }
@@ -59,6 +69,7 @@ export function NotebookHandler({ source, name }: { source: string, name: string
     })
     return (<div>
         <div> {ready ? "READY" : "Waiting"} </div>
+        <div> {installing ? "Installing" : (executed ? "Installed": "")} </div>
         <div> {executed ? "Executed" : ""} </div>
         <div> {executing ? "Executing" : ""} </div>
         <div> {`${cellRefs.length}`}</div>
