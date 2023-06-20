@@ -48,7 +48,9 @@ export function NotebookHandler({ source, name }: { source: string, name: string
     );
 
     async function run() {
+        setInstalling(true);
         await session?.kernel?.requestExecute({code: "%pip install jupyter-utility-widgets\n", silent: true}).done;
+        setInstalling(false)
         const code = `
         import ipywidgets as widgets
         import matplotlib.pyplot as plt
