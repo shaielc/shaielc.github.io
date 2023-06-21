@@ -26,7 +26,18 @@
 
 .App-main {
   background-color: #93a3c2;
-  min-height: 95vh;
+  min-height: 91vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-footer {
+  background-color: #282c34;
+  min-height: 4vh;
   display: flex;
   flex-direction: row;
   align-items: center;

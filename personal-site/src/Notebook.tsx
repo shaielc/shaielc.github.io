@@ -46,7 +46,7 @@ export function NotebookHandler({ source, name }: { source: string, name: string
     const { ready, executing, executeAll, errors, cellRefs, cellIds, session } = useNotebook(
         name,
         notebookSource({ source }),
-        { refsForWidgetsOnly: false },
+        { refsForWidgetsOnly: true },
     );
 
     async function run() {

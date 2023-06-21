@@ -1,6 +1,10 @@
 .modeChooser {
-    display: "flex";
-    align-self: "stretch";
+    display: flex;
+    align-self: stretch;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 3px 2px;
+    background-color: #7f8daa;
 }
 
 .modeChoice {
@@ -10,6 +14,18 @@
     align-items: center;
     user-select: none;
     background-color: #5e6470;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.modeChoiceIcon {
+    display: flex;
+    width: 1.4em;
+}
+.modeChoiceIcon img {
+    margin: auto;
+    height: 1em;
+    width: 1em;
 }
 
 .modeChoice.activeMode {
