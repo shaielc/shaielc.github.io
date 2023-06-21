@@ -7,7 +7,7 @@ export function ModeChooser({ mode, setMode }: { mode: ServerModeType, setMode: 
     return (<div className=".modeChooser">
         {modes.map((modeOption: ServerModeType) => {
              return (
-             <div onClick={() => setMode(modeOption)} className={`modeChoice ${mode === modeOption ? "activeMode" : ""}`}>
+             <div onClick={() => setMode(modeOption)} key={modeOption} className={`modeChoice ${mode === modeOption ? "activeMode" : ""}`}>
                 {modeOption}
             </div>) })}
     </div>)

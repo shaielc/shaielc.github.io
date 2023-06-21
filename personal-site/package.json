@@ -22,6 +22,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "deploy": "npm run build && cp -r build/* ../site",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

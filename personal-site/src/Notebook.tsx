@@ -38,9 +38,11 @@ export default function JupyterOutputDecoration({
     );
 }
 
+
+
 export function NotebookHandler({ source, name }: { source: string, name: string }) {
-    const [executed, setExecuted] = useState(false)
-    const [installing, setInstalling] = useState(false)
+    const [running, setRunning] = useState(0)
+    const [installing, setInstalling] = useState(0)
     const { ready, executing, executeAll, errors, cellRefs, cellIds, session } = useNotebook(
         name,
         notebookSource({ source }),
@@ -48,32 +50,44 @@ export function NotebookHandler({ source, name }: { source: string, name: string
     );
 
     async function run() {
-        setInstalling(true);
-        await session?.kernel?.requestExecute({code: "%pip install jupyter-utility-widgets\n", silent: true}).done;
-        setInstalling(false)
-        const code = `
-        import ipywidgets as widgets
-        import matplotlib.pyplot as plt
-        import numpy as np      
-        from ipywidgets import Output, FloatSlider, Layout
-        from IPython.display import clear_output
-        `
-        await session?.kernel?.requestExecute({code, silent: true}).done;
-        
         await executeAll();
-        setExecuted(true);
     }
+
+
+    async function install() {
+        
+        await session?.kernel?.requestExecute({code: "%pip install jupyter-utility-widgets\n", silent: true}).done;
+        
+const code = `
+import ipywidgets as widgets
+import matplotlib.pyplot as plt
+import numpy as np      
+from ipywidgets import Output, FloatSlider, Layout
+from IPython.display import clear_output
+`
+        await session?.kernel?.requestExecute({code, silent: true}).done;
+        setInstalling(2)
+    }
+
     useEffect(() => {
         if (!ready) return;
-        if (executed) return
-        if (executing) return;
-        run().catch(async () => await session?.restart())
-    })
+        if (installing !== 0) return;
+        setInstalling(1);
+        install().then(() => setInstalling(2)).catch(() => setInstalling(-1))
+    }, [ready])
+
+    useEffect(() => {
+        if(installing !== 2) return
+        if(running !== 0) return
+        setRunning(1)
+        run().then(() => setRunning(2))
+    }, [installing])
+
+
     return (<div>
         <div> {ready ? "READY" : "Waiting"} </div>
-        <div> {installing ? "Installing" : (executed ? "Installed": "")} </div>
-        <div> {executed ? "Executed" : ""} </div>
-        <div> {executing ? "Executing" : ""} </div>
+        <div> {installing === 1 ? "Installing" : (installing === 2 ? "Installed": "")} </div>
+        <div> {running === 2 ? "Executed" : (running === 1? "Executing": "")} </div>
         <div> {`${cellRefs.length}`}</div>
         <div className="m-auto max-w-3xl">
 

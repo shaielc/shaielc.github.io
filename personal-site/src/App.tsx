@@ -7,13 +7,15 @@ import {makeConfiguration} from 'thebe-core'
 import { Notebook} from './Notebook'
 import { ServerModeType, ModeChooser } from './ServerMode'
 
-const config = makeConfiguration({
-
+const options = {
+  kernelOptions: {
+    name: 'Python 3'
+  },
   binderOptions: {
       repo: "shaielc/jupyter-utility-widgets",
       ref: "HEAD"
   }
-})
+}
 
 
 const JUPYTER_UTILITY_WIDGETS_SOURCE = 'https://raw.githubusercontent.com/shaielc/jupyter-utility-widgets/main/examples/'
@@ -22,8 +24,8 @@ function App() {
   const [mode, setMode] = useState<ServerModeType>("Lite")
 
   return (
-    <ThebeBundleLoaderProvider>
-      <ThebeServerProvider connect={false} config={config} useBinder={mode === "Binder"} useJupyterLite={mode === "Lite"} options={{savedSessionOptions: {enabled: false}}}>
+    <ThebeBundleLoaderProvider loadThebeLite publicPath='/thebe'>
+      <ThebeServerProvider connect={false} options={options} useBinder={mode === "Binder"} useJupyterLite={mode === "Lite"}>
         <div className="App">
           <header className="App-header">
             <div style={{flexGrow:1}}></div>
