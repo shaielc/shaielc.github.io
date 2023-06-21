@@ -24,7 +24,7 @@ function App() {
   const [mode, setMode] = useState<ServerModeType>("Lite")
 
   return (
-    <ThebeBundleLoaderProvider loadThebeLite publicPath='/thebe'>
+    <ThebeBundleLoaderProvider loadThebeLite publicPath='./thebe'>
       <ThebeServerProvider connect={false} options={options} useBinder={mode === "Binder"} useJupyterLite={mode === "Lite"}>
         <div className="App">
           <header className="App-header">
