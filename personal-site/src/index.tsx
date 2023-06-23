@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {RouterProvider, createBrowserRouter, redirect} from 'react-router-dom'
-import { Notebook, NotebookPage } from './Notebook';
+import { NotebookPage } from './Notebook';
 import { notebookSource } from './externalSources';
 
 const router = createBrowserRouter([
@@ -13,13 +13,20 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { 
-        path: '/nb/:notebookName',
+        path: '/site/nb/:notebookName',
         element: (
           <NotebookPage source={notebookSource['jupyter-utility-widgets'].source}></NotebookPage>
         )
       },
       {
-        path: '/index.html'
+        path: '/site/index.html'
+      },
+      {
+        path: '/',
+        loader: () => redirect('/site/')
+      },
+      {
+        path: '/site/'
       }
     ]
   }

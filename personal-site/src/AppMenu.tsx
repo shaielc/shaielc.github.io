@@ -18,18 +18,18 @@ const LinkBehavior = React.forwardRef<
 >((props, ref) => {
   const { href, ...other } = props;
   // Map href (Material UI) -> to (react-router)
-  return <RouterLink ref={ref} to={href} {...other} />;
+  return <RouterLink ref={ref} to={href} {...other} relative='path'/>;
 });
 
-export function MenuOptions() {
+export function MenuOptions({closeDrawer}: {closeDrawer: ()=>void}) {
     const [items, setItemList] = useState(<List></List>)
     useEffect( () => {
     fetchAvailableNotebooks(notebookSource['jupyter-utility-widgets'].list).then((files) => {
         const elements = files.map((item) =>{
             console.log(item)
             return (
-            <ListItem key={item.name}>
-                <ListItemButton LinkComponent={LinkBehavior} href={`nb/${item.name}`} >
+            <ListItem key={item.name} >
+                <ListItemButton  LinkComponent={LinkBehavior} href={`./nb/${item.name}`} onClick={closeDrawer}>
                     {item.name}
                 </ListItemButton>
             </ListItem>
@@ -60,7 +60,7 @@ export function AppMenu() {
         <MenuIcon color='primary' />
     </IconButton>
         <Drawer anchor='left' open={isOpen} onClose={() => toggleDrawer(false)}>
-            <MenuOptions></MenuOptions>
+            <MenuOptions closeDrawer={() => toggleDrawer(false)}></MenuOptions>
         </Drawer>
     </div>
 }
