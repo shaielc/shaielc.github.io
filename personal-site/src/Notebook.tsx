@@ -45,16 +45,15 @@ export default function JupyterOutputDecoration({
 export function NotebookHandler({ source, name }: { source: string, name: string }) {
     const [running, setRunning] = useState(0)
     const [installing, setInstalling] = useState(0)
-    const { ready, executing, executeAll, errors, cellRefs, cellIds, session } = useNotebook(
+    let { ready, executing, executeAll, errors, cellRefs, cellIds, session } = useNotebook(
         name,
         notebookSource({ source }),
         { refsForWidgetsOnly: true },
-    );
+    )
 
     async function run() {
         await executeAll();
     }
-
 
     async function install() {
         let execution = session?.kernel?.requestExecute({code: "%pip install jupyter-utility-widgets\n", silent: false})
@@ -65,6 +64,10 @@ export function NotebookHandler({ source, name }: { source: string, name: string
         execution.onReply = console.debug
         await execution.done;
     }
+
+    useEffect(() => {
+
+    }, [name])
 
     useEffect(() => {
         if (!ready) return;
@@ -99,7 +102,7 @@ export function NotebookHandler({ source, name }: { source: string, name: string
 export function Notebook({ source, name }: { source: string, name: string }) {
     return (
         <NotebookProvider name={name}>
-            <NotebookHandler name={name} source={source}></NotebookHandler>
+            <NotebookHandler key={name} name={name} source={source}></NotebookHandler>
         </NotebookProvider>
     )
 }

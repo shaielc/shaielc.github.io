@@ -29,7 +29,7 @@ export function MenuOptions({closeDrawer}: {closeDrawer: ()=>void}) {
             console.log(item)
             return (
             <ListItem key={item.name} >
-                <ListItemButton  LinkComponent={LinkBehavior} href={`./nb/${item.name}`} onClick={closeDrawer}>
+                <ListItemButton  LinkComponent={LinkBehavior} href={`/site/nb/${item.name}`} onClick={closeDrawer}>
                     {item.name}
                 </ListItemButton>
             </ListItem>
