@@ -2,6 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ThebeSessionProvider, ThebeRenderMimeRegistryProvider, useThebeServer, useNotebook } from 'thebe-react';
 import './other/thebe-core.css'
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 export function NotebookProvider({ name, children }: React.PropsWithChildren<{ name: string }>) {
     const { ready } = useThebeServer();
@@ -56,7 +58,7 @@ export function NotebookHandler({ source, name }: { source: string, name: string
     }
 
     async function install() {
-        let execution = session?.kernel?.requestExecute({code: "%pip install jupyter-utility-widgets\n", silent: false})
+        let execution = session?.kernel?.requestExecute({ code: "%pip install jupyter-utility-widgets\n", silent: false })
         if (!execution) {
             throw "Execution Failed"
         }
@@ -77,25 +79,31 @@ export function NotebookHandler({ source, name }: { source: string, name: string
     }, [ready])
 
     useEffect(() => {
-        if(installing !== 2) return
-        if(running !== 0) return
+        if (installing !== 2) return
+        if (running !== 0) return
         setRunning(1)
         run().then(() => setRunning(2)).catch(() => setRunning(-1))
     }, [installing])
 
+    function status(running: number, installing: number) {
+        if (running === 2) return;
+        if (running === 1) return "Running";
+        if (installing === 1) return "Installing"
+        return "Waiting for server...";
+        
+    }
 
     return (<div>
-        <div> {ready ? "READY" : "Waiting"} </div>
-        <div> {installing === 1 ? "Installing" : (installing === 2 ? "Installed": "")} </div>
-        <div> {running === 2 ? "Executed" : (running === 1? "Executing": "")} </div>
-        <div className="m-auto max-w-3xl">
+
+        {running !== 2 ? <CircularProgress /> : <div className="m-auto max-w-3xl">
 
             {cellRefs.map((ref, idx) => {
                 return (
-                    <JupyterOutputDecoration key={idx}><div  ref={ref}>[output]</div></JupyterOutputDecoration>
+                    <JupyterOutputDecoration key={idx}><div ref={ref}>[output]</div></JupyterOutputDecoration>
                 )
             })}
-        </div>
+        </div>}
+        {status(running, installing)}
     </div>)
 }
 
@@ -107,10 +115,10 @@ export function Notebook({ source, name }: { source: string, name: string }) {
     )
 }
 
-export function NotebookPage({ source }: {source: string}) {
-    const params = useParams<{notebookName: string}>()
-    
-    const {notebookName} = params
+export function NotebookPage({ source }: { source: string }) {
+    const params = useParams<{ notebookName: string }>()
+
+    const { notebookName } = params
     if (!notebookName) {
         return <div></div>
     }
