@@ -12,11 +12,14 @@ const router = createBrowserRouter([
     path: '/',
     element: <App />,
     children: [
-      {
-        path: 'nb/:notebookName',
+      { 
+        path: '/nb/:notebookName',
         element: (
           <NotebookPage source={notebookSource['jupyter-utility-widgets'].source}></NotebookPage>
         )
+      },
+      {
+        path: '/index.html'
       }
     ]
   }

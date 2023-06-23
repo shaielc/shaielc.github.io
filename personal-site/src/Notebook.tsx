@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ThebeSessionProvider, ThebeRenderMimeRegistryProvider, useThebeServer, useNotebook } from 'thebe-react';
+import './other/thebe-core.css'
 
 export function NotebookProvider({ name, children }: React.PropsWithChildren<{ name: string }>) {
     const { ready } = useThebeServer();

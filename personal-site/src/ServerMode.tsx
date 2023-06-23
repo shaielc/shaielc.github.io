@@ -4,7 +4,6 @@ import './ServerMode.css'
 import LiteIcon from './icons/lite.png'
 import BinderIcon from './icons/binder.png'
 import {ReactComponent as JupyterIcon} from './icons/jupyter.svg'
-import { JsxElement } from "typescript";
 
 export type ServerModeType = "Binder" | "Lite" | "Local"
 const modes: ServerModeType[] = ["Lite", "Binder", "Local"]
