@@ -26,7 +26,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "deploy": "npm run build && cp -r build/* ../site",
+    "dist": "npm run build && npm run dist:copy",
+    "dist:copy": "cp -r build/* ../site && node copy-thebe-assets.cjs ../thebe",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
