@@ -3,14 +3,16 @@ import './ServerMode.css'
 
 import LiteIcon from './icons/lite.png'
 import BinderIcon from './icons/binder.png'
+import {ReactComponent as JupyterIcon} from './icons/jupyter.svg'
+import { JsxElement } from "typescript";
 
 export type ServerModeType = "Binder" | "Lite" | "Local"
 const modes: ServerModeType[] = ["Lite", "Binder", "Local"]
 
-const icons: {[mode: string]: string} = {
-    "Lite": LiteIcon,
-    "Binder": BinderIcon,
-    "Local": 'jupyter.svg'
+const icons: {[mode: string]: React.ReactNode} = {
+    "Lite": <img src={LiteIcon}></img>,
+    "Binder": <img src={BinderIcon}></img>,
+    "Local": <JupyterIcon />
 }
 export function ModeChooser({ mode, setMode }: { mode: ServerModeType, setMode: (mode: ServerModeType) => void }) {
     return (<div className="modeChooser">
@@ -20,7 +22,7 @@ export function ModeChooser({ mode, setMode }: { mode: ServerModeType, setMode: 
                 {
                     icons[modeOption] ?
                     <div className="modeChoiceIcon">
-                        <img src={icons[modeOption]}></img>
+                        {icons[modeOption]}
                     </div>
                     : modeOption
                 }

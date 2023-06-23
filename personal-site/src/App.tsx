@@ -6,6 +6,23 @@ import { ThebeServerProvider, ThebeBundleLoaderProvider } from 'thebe-react'
 import {makeConfiguration} from 'thebe-core'
 import { Notebook} from './Notebook'
 import { ServerModeType, ModeChooser } from './ServerMode'
+import {NavLink, Outlet} from 'react-router-dom'
+import { AppMenu } from './AppMenu';
+import {ThemeProvider, createTheme} from '@mui/material/styles'
+
+import { common } from '@mui/material/colors';
+import ThebeReact from './icons/thebe_react_wide_logo.png'
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: common['white'],
+    },
+    secondary: {
+      main: common['black'],
+    },
+  },
+});
 
 const options = {
   kernelOptions: {
@@ -17,24 +34,24 @@ const options = {
   }
 }
 
-
-const JUPYTER_UTILITY_WIDGETS_SOURCE = 'https://raw.githubusercontent.com/shaielc/jupyter-utility-widgets/main/examples/'
-
 function App() {
   const [mode, setMode] = useState<ServerModeType>("Lite")
 
   return (
-    <ThebeBundleLoaderProvider loadThebeLite publicPath='./thebe'>
+    <ThemeProvider theme={theme}>
+    <ThebeBundleLoaderProvider loadThebeLite publicPath='../thebe'>
       <ThebeServerProvider connect={false} options={options} useBinder={mode === "Binder"} useJupyterLite={mode === "Lite"}>
         <div className="App">
           <header className="App-header">
+            <AppMenu></AppMenu>
             <span>Jupyter Utility Widgets</span>
             <div style={{flexGrow:1}}></div>
             <ModeChooser mode={mode} setMode={setMode}></ModeChooser>
             <ConnectionHeader></ConnectionHeader>
           </header>
           <main className='App-main'>
-            <Notebook name='filter_design' source={JUPYTER_UTILITY_WIDGETS_SOURCE}></Notebook>
+            <Outlet />
+            
           </main>
           <footer className='App-footer'>
           <div style={{flexGrow:1}}></div>
@@ -42,13 +59,14 @@ function App() {
             <div style={{marginLeft: "auto", alignItems: "center", display: "flex"}}>
               <span> Powered by:</span>
               <a href='https://mystmd.org/thebe/' style={{display: "flex"}}>
-                <img src="thebe_react_wide_logo.png" style={{height:"1em"}}></img>
+                <img src={ThebeReact} style={{height:"1em"}}></img>
               </a>
             </div>
           </footer>
         </div>
       </ThebeServerProvider>
     </ThebeBundleLoaderProvider>
+    </ThemeProvider>
   );
 }
 

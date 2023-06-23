@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { ThebeSessionProvider, ThebeRenderMimeRegistryProvider, useThebeServer, useNotebook } from 'thebe-react';
 
 export function NotebookProvider({ name, children }: React.PropsWithChildren<{ name: string }>) {
@@ -16,7 +17,7 @@ export function NotebookProvider({ name, children }: React.PropsWithChildren<{ n
 
 function notebookSource({ source }: { source: string }) {
     return async (n: string) => {
-        const url = `${source}/${n}.ipynb`;
+        const url = `${source}/${n}`;
         const resp = await fetch(url);
         if (!resp.ok) throw Error(`Could not load ${url}`);
         return resp.json();
@@ -55,18 +56,13 @@ export function NotebookHandler({ source, name }: { source: string, name: string
 
 
     async function install() {
-        
-        await session?.kernel?.requestExecute({code: "%pip install jupyter-utility-widgets\n", silent: true}).done;
-        
-const code = `
-import ipywidgets as widgets
-import matplotlib.pyplot as plt
-import numpy as np      
-from ipywidgets import Output, FloatSlider, Layout
-from IPython.display import clear_output
-`
-        await session?.kernel?.requestExecute({code, silent: true}).done;
-        setInstalling(2)
+        let execution = session?.kernel?.requestExecute({code: "%pip install jupyter-utility-widgets\n", silent: false})
+        if (!execution) {
+            throw "Execution Failed"
+        }
+        execution.onIOPub = console.debug
+        execution.onReply = console.debug
+        await execution.done;
     }
 
     useEffect(() => {
@@ -80,7 +76,7 @@ from IPython.display import clear_output
         if(installing !== 2) return
         if(running !== 0) return
         setRunning(1)
-        run().then(() => setRunning(2))
+        run().then(() => setRunning(2)).catch(() => setRunning(-1))
     }, [installing])
 
 
@@ -88,7 +84,6 @@ from IPython.display import clear_output
         <div> {ready ? "READY" : "Waiting"} </div>
         <div> {installing === 1 ? "Installing" : (installing === 2 ? "Installed": "")} </div>
         <div> {running === 2 ? "Executed" : (running === 1? "Executing": "")} </div>
-        <div> {`${cellRefs.length}`}</div>
         <div className="m-auto max-w-3xl">
 
             {cellRefs.map((ref, idx) => {
@@ -106,4 +101,18 @@ export function Notebook({ source, name }: { source: string, name: string }) {
             <NotebookHandler name={name} source={source}></NotebookHandler>
         </NotebookProvider>
     )
+}
+
+export function NotebookPage({ source }: {source: string}) {
+    const params = useParams<{notebookName: string}>()
+    
+    const {notebookName} = params
+    if (!notebookName) {
+        return <div></div>
+    }
+    console.log(params)
+    return (<div>
+        <span>{notebookName}</span>
+        <Notebook name={notebookName} source={source}></Notebook>
+    </div>)
 }

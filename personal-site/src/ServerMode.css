@@ -22,8 +22,16 @@
     display: flex;
     width: 1.4em;
 }
+
 .modeChoiceIcon img {
     margin: auto;
+    height: 1em;
+    width: 1em;
+}
+
+.modeChoiceIcon svg {
+    margin-left: auto;
+    margin-right: auto;
     height: 1em;
     width: 1em;
 }
